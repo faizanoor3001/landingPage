@@ -1,11 +1,17 @@
 'use client'
 
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Particles from "react-tsparticles";
 import type { Container, Engine } from "tsparticles-engine";
 import { loadSlim } from "tsparticles-slim";
 
 const ParticleBackground = () => {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const particlesInit = useCallback(async (engine: Engine) => {
     await loadSlim(engine);
   }, []);
@@ -13,6 +19,8 @@ const ParticleBackground = () => {
   const particlesLoaded = useCallback(async (container: Container | undefined) => {
     console.log("Particles loaded", container);
   }, []);
+
+  if (!isMounted) return null;
 
   return (
     <Particles
