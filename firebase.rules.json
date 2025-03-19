@@ -1,0 +1,11 @@
+{
+  "rules": {
+    ".read": "request.auth != null || request.headers.origin.matches('https://(.*\\.)?zoroenergy\\.com') || request.headers.origin.matches('https://(.*\\.)?vercel\\.app')",
+    ".write": "request.auth != null || request.headers.origin.matches('https://(.*\\.)?zoroenergy\\.com') || request.headers.origin.matches('https://(.*\\.)?vercel\\.app')",
+    "contacts": {
+      ".indexOn": ["createdAt"],
+      ".read": false,
+      ".write": "request.headers.origin.matches('https://(.*\\.)?zoroenergy\\.com') || request.headers.origin.matches('https://(.*\\.)?vercel\\.app')"
+    }
+  }
+} 
