@@ -11,9 +11,9 @@ interface PageLayoutProps {
 
 export default function PageLayout({ children }: PageLayoutProps) {
   return (
-    <div className="relative min-h-screen bg-black">
+    <div className="relative min-h-screen bg-black/80">
       {/* Background with particles */}
-      <div className="absolute inset-0 opacity-50">
+      <div className="absolute inset-0">
         <ParticleBackground />
       </div>
 

@@ -20,7 +20,7 @@ const HeroSceneVideo: React.FC<HeroSceneVideoProps> = ({ className = '' }) => {
   return (
     <div className={`relative min-h-screen flex items-center ${className}`}>
       {/* Background with particles */}
-      <div className="absolute inset-0 opacity-50">
+      <div className="absolute inset-0">
         <ParticleBackground />
       </div>
 

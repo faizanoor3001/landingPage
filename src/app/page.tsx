@@ -15,7 +15,7 @@ const HeroScene = dynamic(() => import('@/components/3d/HeroScene'), {
 const HeroSceneVideo = dynamic(() => import('@/components/hero/HeroSceneVideo'), {
   ssr: false,
   loading: () => (
-    <div className="min-h-[80vh] bg-black flex items-center justify-center">
+    <div className="min-h-[80vh] flex items-center justify-center">
       <div className="text-white text-2xl">Loading...</div>
     </div>
   )
@@ -27,9 +27,9 @@ const USE_3D_VERSION = false
 export default function Home() {
   return (
     <PageLayout>
-      <div className="bg-black min-h-screen">
+      <div className="min-h-screen bg-black/80">
         <Suspense fallback={
-          <div className="min-h-[80vh] bg-black flex items-center justify-center">
+          <div className="min-h-[80vh] flex items-center justify-center bg-black/80">
             <div className="text-white text-2xl">Loading...</div>
           </div>
         }>
