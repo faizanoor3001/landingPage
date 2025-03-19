@@ -202,7 +202,9 @@ const Element = ({ position, deviceType, scale = 1 }: ElementProps) => {
   const groupRef = useRef<Group>(null)
   const [springs, api] = useSpring(() => ({
     position: position as [number, number, number],
-    rotation: [0, 0, 0] as [number, number, number],
+    rotationX: 0,
+    rotationY: 0,
+    rotationZ: 0,
     config: { mass: 1, tension: 170, friction: 26 }
   }))
 
@@ -214,11 +216,9 @@ const Element = ({ position, deviceType, scale = 1 }: ElementProps) => {
           position[1] + (Math.random() - 0.5) * 0.7,
           position[2] + (Math.random() - 0.5) * 0.7
         ] as [number, number, number],
-        rotation: [
-          Math.random() * Math.PI * 0.25,
-          Math.random() * Math.PI * 2,
-          Math.random() * Math.PI * 0.25
-        ] as [number, number, number]
+        rotationX: Math.random() * Math.PI * 0.25,
+        rotationY: Math.random() * Math.PI * 2,
+        rotationZ: Math.random() * Math.PI * 0.25
       })
     }, 3000)
 
@@ -229,7 +229,9 @@ const Element = ({ position, deviceType, scale = 1 }: ElementProps) => {
     <animated.group
       ref={groupRef}
       position={springs.position}
-      rotation={springs.rotation}
+      rotation-x={springs.rotationX}
+      rotation-y={springs.rotationY}
+      rotation-z={springs.rotationZ}
       scale={scale}
     >
       {deviceType === 'solar' && <SolarPanel />}
