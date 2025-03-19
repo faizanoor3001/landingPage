@@ -1,6 +1,7 @@
 import { initializeApp, getApps } from 'firebase/app'
 import { getFirestore } from 'firebase/firestore'
 import { getAnalytics } from 'firebase/analytics'
+import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check'
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -14,12 +15,17 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0]
-const db = getFirestore(app)
 
-// Initialize Analytics only on client side
-let analytics = null
-if (typeof window !== 'undefined') {
-  analytics = getAnalytics(app)
+// Initialize App Check in production
+if (process.env.NODE_ENV === 'production') {
+  initializeAppCheck(app, {
+    provider: new ReCaptchaV3Provider(process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''),
+    isTokenAutoRefreshEnabled: true
+  })
 }
 
-export { db, analytics } 
+// Initialize services
+export const db = getFirestore(app)
+export const analytics = typeof window !== 'undefined' ? getAnalytics(app) : null
+
+export default app 
