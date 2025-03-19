@@ -1,8 +1,5 @@
 import { NextResponse } from 'next/server'
 import { db } from '@/lib/firebase'
-<<<<<<< Updated upstream
-import { collection, addDoc } from 'firebase/firestore'
-=======
 import { collection, addDoc, query, where, getDocs, Timestamp } from 'firebase/firestore'
 
 // Rate limit window in minutes
@@ -24,15 +21,10 @@ async function checkRateLimit(ip: string): Promise<boolean> {
   const querySnapshot = await getDocs(q)
   return querySnapshot.size < MAX_SUBMISSIONS
 }
->>>>>>> Stashed changes
 
 export async function POST(req: Request) {
   try {
-<<<<<<< Updated upstream
-    const body = await request.json()
-=======
     const body = await req.json()
->>>>>>> Stashed changes
     const { 
       // Basic fields
       name, 
@@ -48,12 +40,6 @@ export async function POST(req: Request) {
       timeframe = '',
       existingSetup = ''
     } = body
-<<<<<<< Updated upstream
-
-    // Validate required fields
-    if (!name || !email || !company || !jobTitle || !phone || !message || !preferredContact || !bestTimeToContact) {
-      return NextResponse.json(
-=======
     
     // Get client IP
     const forwardedFor = req.headers.get('x-forwarded-for')
@@ -71,7 +57,6 @@ export async function POST(req: Request) {
     // Validate required fields
     if (!name || !email || !company || !jobTitle || !phone || !message || !preferredContact || !bestTimeToContact) {
       return NextResponse.json(
->>>>>>> Stashed changes
         { message: 'Missing required fields' },
         { status: 400 }
       )
@@ -94,9 +79,6 @@ export async function POST(req: Request) {
       existingSetup,
       // Metadata
       submitted: new Date().toISOString(),
-<<<<<<< Updated upstream
-      isAdvancedSubmission: Boolean(industry || timeframe || existingSetup)
-=======
       isAdvancedSubmission: Boolean(industry || timeframe || existingSetup),
       ip // Store IP for rate limiting
     })
@@ -106,7 +88,6 @@ export async function POST(req: Request) {
       contactId: docRef.id,
       ip,
       timestamp: Timestamp.now()
->>>>>>> Stashed changes
     })
 
     return NextResponse.json(
