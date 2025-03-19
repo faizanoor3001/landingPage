@@ -17,7 +17,9 @@ const ZLogo: React.FC<ZLogoProps> = ({ scale = 1, position = [0, 0, 0] }) => {
   const [springs, api] = useSpring(() => ({
     scale: [1, 1, 1] as [number, number, number],
     position: position as [number, number, number],
-    rotation: [0, 0, 0] as [number, number, number],
+    rotationX: 0,
+    rotationY: 0,
+    rotationZ: 0,
     config: { mass: 1, tension: 280, friction: 60 }
   }))
 
@@ -25,7 +27,9 @@ const ZLogo: React.FC<ZLogoProps> = ({ scale = 1, position = [0, 0, 0] }) => {
     // Enhanced dynamic rotation animation
     api.start({
       scale: [scale, scale, scale],
-      rotation: [Math.PI * 0.05, Math.PI * 2, Math.PI * 0.05],
+      rotationX: Math.PI * 0.05,
+      rotationY: Math.PI * 2,
+      rotationZ: Math.PI * 0.05,
       loop: true,
       config: { duration: 8000 }
     })
@@ -107,7 +111,9 @@ const ZLogo: React.FC<ZLogoProps> = ({ scale = 1, position = [0, 0, 0] }) => {
       ref={groupRef}
       scale={springs.scale}
       position={springs.position}
-      rotation={springs.rotation}
+      rotation-x={springs.rotationX}
+      rotation-y={springs.rotationY}
+      rotation-z={springs.rotationZ}
     >
       {/* Z Logo parts */}
       <group>
