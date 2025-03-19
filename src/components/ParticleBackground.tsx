@@ -43,8 +43,8 @@ const ParticleBackground = () => {
             color: "#3CB371",
             distance: 200,
             enable: true,
-            opacity: 0.4,
-            width: 1,
+            opacity: 0.6,
+            width: 1.2,
           },
           move: {
             enable: true,
@@ -52,24 +52,24 @@ const ParticleBackground = () => {
               default: "bounce",
             },
             random: false,
-            speed: 1,
+            speed: 1.2,
             straight: false,
           },
           number: {
             density: {
               enable: true,
-              area: 1000,
+              area: 800,
             },
-            value: 80,
+            value: 100,
           },
           opacity: {
-            value: 0.5,
+            value: 0.7,
           },
           shape: {
             type: "circle",
           },
           size: {
-            value: { min: 1, max: 3 },
+            value: { min: 1, max: 4 },
           },
         },
         detectRetina: true,

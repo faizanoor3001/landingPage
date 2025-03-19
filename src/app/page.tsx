@@ -27,9 +27,9 @@ const USE_3D_VERSION = false
 export default function Home() {
   return (
     <PageLayout>
-      <div className="min-h-screen bg-black/80">
+      <div className="min-h-screen bg-black/60">
         <Suspense fallback={
-          <div className="min-h-[80vh] flex items-center justify-center bg-black/80">
+          <div className="min-h-[80vh] flex items-center justify-center bg-black/60">
             <div className="text-white text-2xl">Loading...</div>
           </div>
         }>

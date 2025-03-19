@@ -1,48 +1,34 @@
 import { NextResponse } from 'next/server'
-import { db } from '@/lib/firebase'
-import { collection, addDoc, query, where, getDocs, Timestamp } from 'firebase/firestore'
+import { getFirestore, collection, addDoc, query, where, getDocs, Timestamp } from 'firebase/firestore'
+import app from '@/lib/firebase'
 
 // Rate limit window in minutes
 const RATE_LIMIT_WINDOW = 60
-// Maximum submissions per window
-const MAX_SUBMISSIONS = 5
+const RATE_LIMIT_MAX_REQUESTS = 5
 
 async function checkRateLimit(ip: string): Promise<boolean> {
+  const db = getFirestore(app)
   const now = Timestamp.now()
-  const windowStart = new Date(now.toDate().getTime() - (RATE_LIMIT_WINDOW * 60 * 1000))
+  const windowStart = Timestamp.fromDate(new Date(now.toDate().getTime() - (RATE_LIMIT_WINDOW * 60 * 1000)))
   
   const submissionsRef = collection(db, 'contact_submissions')
   const q = query(
     submissionsRef,
     where('ip', '==', ip),
-    where('timestamp', '>=', Timestamp.fromDate(windowStart))
+    where('timestamp', '>=', windowStart)
   )
   
   const querySnapshot = await getDocs(q)
-  return querySnapshot.size < MAX_SUBMISSIONS
+  return querySnapshot.size < RATE_LIMIT_MAX_REQUESTS
 }
 
-export async function POST(req: Request) {
+export async function POST(request: Request) {
   try {
-    const body = await req.json()
-    const { 
-      // Basic fields
-      name, 
-      email,
-      company,
-      jobTitle,
-      phone,
-      preferredContact,
-      bestTimeToContact,
-      message,
-      // Advanced fields (optional)
-      industry = '',
-      timeframe = '',
-      existingSetup = ''
-    } = body
-    
-    // Get client IP
-    const forwardedFor = req.headers.get('x-forwarded-for')
+    const body = await request.json()
+    const { name, email, message } = body
+
+    // Get client IP for rate limiting
+    const forwardedFor = request.headers.get('x-forwarded-for')
     const ip = forwardedFor ? forwardedFor.split(',')[0] : 'unknown'
     
     // Check rate limit
@@ -54,36 +40,27 @@ export async function POST(req: Request) {
       )
     }
 
-    // Validate required fields
-    if (!name || !email || !company || !jobTitle || !phone || !message || !preferredContact || !bestTimeToContact) {
+    // Validate the input
+    if (!name || !email || !message) {
       return NextResponse.json(
-        { message: 'Missing required fields' },
+        { error: 'Missing required fields' },
         { status: 400 }
       )
     }
 
-    // Add document to Firestore
-    const docRef = await addDoc(collection(db, 'contactSubmissions'), {
-      // Basic fields
+    // Initialize Firestore
+    const db = getFirestore(app)
+
+    // Add the contact form submission to Firestore
+    const docRef = await addDoc(collection(db, 'contacts'), {
       name,
       email,
-      company,
-      jobTitle,
-      phone,
-      preferredContact,
-      bestTimeToContact,
       message,
-      // Advanced fields
-      industry,
-      timeframe,
-      existingSetup,
-      // Metadata
-      submitted: new Date().toISOString(),
-      isAdvancedSubmission: Boolean(industry || timeframe || existingSetup),
+      timestamp: Timestamp.now(),
       ip // Store IP for rate limiting
     })
 
-    // Also store submission for rate limiting
+    // Store submission for rate limiting
     await addDoc(collection(db, 'contact_submissions'), {
       contactId: docRef.id,
       ip,
@@ -91,13 +68,13 @@ export async function POST(req: Request) {
     })
 
     return NextResponse.json(
-      { message: 'Form submitted successfully', id: docRef.id },
+      { message: 'Contact form submitted successfully', id: docRef.id },
       { status: 200 }
     )
   } catch (error) {
-    console.error('Error submitting form:', error)
+    console.error('Error in contact form submission:', error)
     return NextResponse.json(
-      { message: 'Error submitting form' },
+      { error: 'Internal server error' },
       { status: 500 }
     )
   }
