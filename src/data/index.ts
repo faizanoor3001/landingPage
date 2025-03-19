@@ -11,6 +11,7 @@ interface Benefit {
 interface Feature {
   title: string;
   description: string;
+  bulletPoints: string[];
 }
 
 export const benefits: Benefit[] = [
@@ -54,19 +55,43 @@ export const benefits: Benefit[] = [
 
 export const features: Feature[] = [
   {
-    title: "Solar Power Solutions",
-    description: "Advanced monitoring and optimization for solar installations with real-time performance tracking and predictive maintenance."
+    title: "AI-Driven Energy Management",
+    description: "Harness the power of artificial intelligence to optimize your building's energy consumption and performance.",
+    bulletPoints: [
+      "Optimize HVAC, lighting, and energy systems",
+      "Real-time occupancy and weather data integration"
+    ]
   },
   {
-    title: "Energy Storage",
-    description: "Intelligent battery management system with dynamic load balancing and peak shaving capabilities."
+    title: "Real-Time Monitoring",
+    description: "Stay informed with comprehensive monitoring solutions that provide actionable insights.",
+    bulletPoints: [
+      "Track energy and water usage",
+      "Identify improvement areas instantly"
+    ]
   },
   {
-    title: "EV Charging Infrastructure",
-    description: "Smart charging network management with load balancing, scheduling, and user management features."
+    title: "Smart Room Controls",
+    description: "Empower users with intuitive control over their environment through advanced technology.",
+    bulletPoints: [
+      "Mobile and voice-controlled adjustments",
+      "Personalized comfort settings"
+    ]
   },
   {
-    title: "Grid Management",
-    description: "Comprehensive grid integration tools with real-time monitoring and automated demand response."
+    title: "Digital Water Management",
+    description: "Implement intelligent water management solutions for efficiency and conservation.",
+    bulletPoints: [
+      "Leak detection",
+      "Automated irrigation and pressure optimization"
+    ]
+  },
+  {
+    title: "Integration Capabilities",
+    description: "Connect and optimize your building systems through seamless integration.",
+    bulletPoints: [
+      "Seamless connection with existing systems",
+      "Streamlined operations management"
+    ]
   }
 ]; 

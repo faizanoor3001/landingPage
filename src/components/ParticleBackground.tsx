@@ -20,7 +20,7 @@ const ParticleBackground = () => {
 
   return (
     <Particles
-      className="absolute inset-0"
+      className="absolute inset-0 z-0"
       id="tsparticles"
       init={particlesInit}
       options={{
@@ -36,36 +36,36 @@ const ParticleBackground = () => {
           },
           links: {
             color: "#3CB371",
-            distance: 90,
+            distance: 150,
             enable: true,
-            opacity: 0.08,
-            width: 0.5,
+            opacity: 0.2,
+            width: 1,
           },
           move: {
             enable: true,
             outModes: {
-              default: "out",
+              default: "bounce",
             },
             random: false,
-            speed: 0.3,
+            speed: 0.5,
             straight: false,
           },
           number: {
             density: {
               enable: true,
-              area: 250,
+              area: 800,
             },
-            value: 300,
-            limit: 400,
+            value: 100,
+            limit: 150,
           },
           opacity: {
-            value: 0.12,
+            value: 0.3,
           },
           shape: {
             type: "circle",
           },
           size: {
-            value: { min: 0.4, max: 1 },
+            value: { min: 1, max: 3 },
           },
         },
         detectRetina: true,
@@ -73,14 +73,14 @@ const ParticleBackground = () => {
           events: {
             onHover: {
               enable: true,
-              mode: "connect",
+              mode: "grab",
             },
           },
           modes: {
-            connect: {
-              distance: 120,
+            grab: {
+              distance: 140,
               links: {
-                opacity: 0.08,
+                opacity: 0.3,
               },
             },
           },
