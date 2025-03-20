@@ -48,22 +48,6 @@ const HeroScene = () => {
 
       <Navigation />
       
-      {/* 3D Scene Container */}
-      <div className="absolute left-0 top-0 w-1/2 h-full">
-        <Canvas
-          camera={{ position: [0, 0, 10], fov: 45 }}
-          style={{ background: 'transparent' }}
-        >
-          <Suspense fallback={null}>
-            <ambientLight intensity={0.5} />
-            <directionalLight position={[10, 10, 5]} intensity={1} />
-            <Environment preset="city" />
-            <ZLogo position={[-2, 0, 0]} />
-            <OrbitControls enableZoom={false} enablePan={false} />
-          </Suspense>
-        </Canvas>
-      </div>
-      
       {/* Hero Content - Right Side */}
       <div className="absolute right-0 top-0 w-1/2 h-full flex items-center justify-center">
         <div className="max-w-xl w-full px-8">
