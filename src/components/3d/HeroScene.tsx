@@ -3,7 +3,6 @@
 import React, { Suspense, useEffect, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls, Environment } from '@react-three/drei'
-import ZLogo from './ZLogo'
 import Navigation from '../Navigation'
 import ParticleBackground from '../ParticleBackground'
 
