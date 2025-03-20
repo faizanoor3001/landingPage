@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
-import { db } from '@/lib/firebase'
-import { collection, addDoc, query, where, getDocs, Timestamp } from 'firebase/firestore'
+import { adminDb } from '@/lib/firebase-admin'
+import { Timestamp } from 'firebase-admin/firestore'
 
 // Rate limit window in minutes
 const RATE_LIMIT_WINDOW = 60
@@ -11,14 +11,12 @@ async function checkRateLimit(ip: string): Promise<boolean> {
   const now = Timestamp.now()
   const windowStart = new Date(now.toDate().getTime() - (RATE_LIMIT_WINDOW * 60 * 1000))
   
-  const submissionsRef = collection(db, 'contact_submissions')
-  const q = query(
-    submissionsRef,
-    where('ip', '==', ip),
-    where('timestamp', '>=', Timestamp.fromDate(windowStart))
-  )
+  const submissionsRef = adminDb.collection('contact_submissions')
+  const q = submissionsRef
+    .where('ip', '==', ip)
+    .where('timestamp', '>=', windowStart)
   
-  const querySnapshot = await getDocs(q)
+  const querySnapshot = await q.get()
   return querySnapshot.size < MAX_SUBMISSIONS
 }
 
@@ -63,7 +61,7 @@ export async function POST(req: Request) {
     }
 
     // Add document to Firestore
-    const docRef = await addDoc(collection(db, 'contactSubmissions'), {
+    const contactSubmissionRef = await adminDb.collection('contactSubmissions').add({
       // Basic fields
       name,
       email,
@@ -84,14 +82,14 @@ export async function POST(req: Request) {
     })
 
     // Also store submission for rate limiting
-    await addDoc(collection(db, 'contact_submissions'), {
-      contactId: docRef.id,
+    await adminDb.collection('contact_submissions').add({
+      contactId: contactSubmissionRef.id,
       ip,
       timestamp: Timestamp.now()
     })
 
     return NextResponse.json(
-      { message: 'Form submitted successfully', id: docRef.id },
+      { message: 'Form submitted successfully', id: contactSubmissionRef.id },
       { status: 200 }
     )
   } catch (error) {
