@@ -9,13 +9,17 @@ if (!getApps().length) {
       throw new Error('FIREBASE_PRIVATE_KEY environment variable is not set')
     }
 
-    // Initialize with the private key directly from environment variable
-    // The key is already properly formatted with \n characters from Vercel
+    // Format the private key by removing escaped quotes and handling newlines
+    const privateKey = process.env.FIREBASE_PRIVATE_KEY
+      .replace(/^"|"$/g, '') // Remove escaped quotes at start and end
+      .replace(/\\n/g, '\n') // Replace escaped newlines with actual newlines
+
+    // Initialize with the formatted private key
     initializeApp({
       credential: cert({
         projectId: process.env.FIREBASE_PROJECT_ID || 'zoroiot-poc-3b968',
         clientEmail: process.env.FIREBASE_CLIENT_EMAIL || 'firebase-adminsdk-fbsvc@zoroiot-poc-3b968.iam.gserviceaccount.com',
-        privateKey: process.env.FIREBASE_PRIVATE_KEY
+        privateKey: privateKey
       })
     })
   } catch (error) {
