@@ -4,28 +4,22 @@ import { getFirestore } from 'firebase-admin/firestore'
 // Check if we need to initialize the app
 if (!getApps().length) {
   try {
-    // Debug: Check if private key exists
+    // Check if private key exists
     if (!process.env.FIREBASE_PRIVATE_KEY) {
       throw new Error('FIREBASE_PRIVATE_KEY environment variable is not set')
     }
 
-    // Debug: Log key info
-    console.log('Private key exists:', !!process.env.FIREBASE_PRIVATE_KEY)
-    console.log('Private key length:', process.env.FIREBASE_PRIVATE_KEY.length)
-    console.log('Private key starts with:', process.env.FIREBASE_PRIVATE_KEY.substring(0, 50))
-
-    // Initialize with explicit string conversion
+    // Initialize with the private key directly from environment variable
+    // The key is already properly formatted with \n characters from Vercel
     initializeApp({
       credential: cert({
-        projectId: 'zoroiot-poc-3b968',
-        clientEmail: 'firebase-adminsdk-fbsvc@zoroiot-poc-3b968.iam.gserviceaccount.com',
-        privateKey: String(process.env.FIREBASE_PRIVATE_KEY).replace(/\\n/g, '\n'),
+        projectId: process.env.FIREBASE_PROJECT_ID || 'zoroiot-poc-3b968',
+        clientEmail: process.env.FIREBASE_CLIENT_EMAIL || 'firebase-adminsdk-fbsvc@zoroiot-poc-3b968.iam.gserviceaccount.com',
+        privateKey: process.env.FIREBASE_PRIVATE_KEY
       })
     })
   } catch (error) {
     console.error('Error initializing Firebase Admin:', error)
-    // Debug: Log all environment variables (excluding values)
-    console.error('Available environment variables:', Object.keys(process.env))
     throw error
   }
 }
