@@ -1,12 +1,13 @@
 'use client'
 
-import React, { Suspense } from 'react'
+import React, { Suspense, useState } from 'react'
 import dynamic from 'next/dynamic'
 import { benefits, features } from '../data'
 import Link from 'next/link'
 import ContactForm from '@/components/ContactForm'
 import PageLayout from '@/components/layouts/PageLayout'
 import { AnimatedCounter } from '../components/AnimatedCounter'
+import { DirectMarketingModal } from '@/components/DirectMarketing/components/Modal'
 
 // Keep both versions available
 const HeroScene = dynamic(() => import('@/components/3d/HeroScene'), {
@@ -26,6 +27,8 @@ const HeroSceneVideo = dynamic(() => import('@/components/hero/HeroSceneVideo'),
 const USE_3D_VERSION = false
 
 export default function Home() {
+  const [isCalculatorOpen, setIsCalculatorOpen] = useState(false);
+
   return (
     <PageLayout>
       <div className="min-h-screen bg-black/20">
@@ -101,9 +104,18 @@ export default function Home() {
                           </li>
                         ))}
                       </ul>
-                      <button className="bg-[#3CB371] hover:bg-[#2D8A5F] text-white px-6 py-2 rounded-lg transition-all duration-300">
-                        Learn More
-                      </button>
+                      {feature.title === "Integration Capabilities" ? (
+                        <Link
+                          href="/direct-marketing-calculator"
+                          className="inline-block bg-[#3CB371] hover:bg-[#2D8A5F] text-white px-6 py-2 rounded-lg transition-all duration-300"
+                        >
+                          Calculate Profit
+                        </Link>
+                      ) : (
+                        <button className="bg-[#3CB371] hover:bg-[#2D8A5F] text-white px-6 py-2 rounded-lg transition-all duration-300">
+                          Learn More
+                        </button>
+                      )}
                     </div>
                   </div>
                   <div className="w-1/2">
@@ -134,6 +146,11 @@ export default function Home() {
           </div>
         </section>
       </div>
+
+      <DirectMarketingModal
+        isOpen={isCalculatorOpen}
+        onClose={() => setIsCalculatorOpen(false)}
+      />
     </PageLayout>
   )
 } 
