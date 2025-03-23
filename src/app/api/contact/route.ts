@@ -7,95 +7,43 @@ const RATE_LIMIT_WINDOW = 60
 // Maximum submissions per window
 const MAX_SUBMISSIONS = 5
 
-async function checkRateLimit(ip: string): Promise<boolean> {
-  const now = Timestamp.now()
-  const windowStart = new Date(now.toDate().getTime() - (RATE_LIMIT_WINDOW * 60 * 1000))
-  
-  const submissionsRef = adminDb.collection('contact_submissions')
-  const q = submissionsRef
-    .where('ip', '==', ip)
-    .where('timestamp', '>=', windowStart)
-  
-  const querySnapshot = await q.get()
-  return querySnapshot.size < MAX_SUBMISSIONS
-}
-
-export async function POST(req: Request) {
+export async function POST(request: Request) {
   try {
-    const body = await req.json()
-    const { 
-      // Basic fields
-      name, 
-      email,
-      company,
-      jobTitle,
-      phone,
-      preferredContact,
-      bestTimeToContact,
-      message,
-      // Advanced fields (optional)
-      industry = '',
-      timeframe = '',
-      existingSetup = ''
-    } = body
+    const { name, email, phone, message } = await request.json()
+    const headers = request.headers
+
+    // Rate limiting check
+    const oneHourAgo = new Date(Date.now() - RATE_LIMIT_WINDOW * 60 * 1000)
+    const submissionsRef = adminDb.collection('contact_submissions')
     
-    // Get client IP
-    const forwardedFor = req.headers.get('x-forwarded-for')
-    const ip = forwardedFor ? forwardedFor.split(',')[0] : 'unknown'
-    
-    // Check rate limit
-    const isAllowed = await checkRateLimit(ip)
-    if (!isAllowed) {
+    // Query only by timestamp to avoid composite index
+    const recentSubmissions = await submissionsRef
+      .where('timestamp', '>=', Timestamp.fromDate(oneHourAgo))
+      .get()
+
+    if (recentSubmissions.size >= MAX_SUBMISSIONS) {
       return NextResponse.json(
-        { error: 'Too many requests. Please try again later.' },
+        { error: 'Too many submissions. Please try again later.' },
         { status: 429 }
       )
     }
 
-    // Validate required fields
-    if (!name || !email || !company || !jobTitle || !phone || !message || !preferredContact || !bestTimeToContact) {
-      return NextResponse.json(
-        { message: 'Missing required fields' },
-        { status: 400 }
-      )
-    }
-
-    // Add document to Firestore
-    const contactSubmissionRef = await adminDb.collection('contactSubmissions').add({
-      // Basic fields
+    // Add submission to Firestore
+    await submissionsRef.add({
       name,
       email,
-      company,
-      jobTitle,
       phone,
-      preferredContact,
-      bestTimeToContact,
       message,
-      // Advanced fields
-      industry,
-      timeframe,
-      existingSetup,
-      // Metadata
-      submitted: new Date().toISOString(),
-      isAdvancedSubmission: Boolean(industry || timeframe || existingSetup),
-      ip // Store IP for rate limiting
+      ip: headers.get('x-forwarded-for') || 'unknown',
+      timestamp: Timestamp.now(),
+      userAgent: headers.get('user-agent') || 'unknown'
     })
 
-    // Also store submission for rate limiting
-    await adminDb.collection('contact_submissions').add({
-      contactId: contactSubmissionRef.id,
-      ip,
-      timestamp: Timestamp.now()
-    })
-
-    return NextResponse.json(
-      { message: 'Form submitted successfully', id: contactSubmissionRef.id },
-      { status: 200 }
-    )
+    return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Error submitting form:', error)
+    console.error('Contact form submission error:', error)
     return NextResponse.json(
-      { message: 'Error submitting form' },
+      { error: 'Failed to submit form. Please try again.' },
       { status: 500 }
     )
   }
