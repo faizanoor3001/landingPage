@@ -18,6 +18,7 @@ const apps = getApps()
 const app = apps.length === 0 ? initializeApp(firebaseConfig) : apps[0]
 
 // Initialize App Check in browser environment only
+let analytics = null
 if (typeof window !== 'undefined') {
   analytics = getAnalytics(app)
 }
