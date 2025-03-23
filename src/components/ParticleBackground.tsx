@@ -16,18 +16,13 @@ const ParticleBackground = () => {
     await loadSlim(engine);
   }, []);
 
-  const particlesLoaded = useCallback(async (container: Container | undefined) => {
-    console.log("Particles loaded", container);
-  }, []);
-
   if (!isMounted) return null;
 
   return (
     <Particles
-      className="absolute inset-0"
+      className="absolute inset-0 z-0"
       id="tsparticles"
       init={particlesInit}
-      loaded={particlesLoaded}
       options={{
         background: {
           color: {
@@ -41,10 +36,10 @@ const ParticleBackground = () => {
           },
           links: {
             color: "#3CB371",
-            distance: 200,
+            distance: 150,
             enable: true,
-            opacity: 0.6,
-            width: 1.2,
+            opacity: 0.2,
+            width: 1,
           },
           move: {
             enable: true,
@@ -52,7 +47,7 @@ const ParticleBackground = () => {
               default: "bounce",
             },
             random: false,
-            speed: 1.2,
+            speed: 0.5,
             straight: false,
           },
           number: {
@@ -61,9 +56,10 @@ const ParticleBackground = () => {
               area: 800,
             },
             value: 100,
+            limit: 150,
           },
           opacity: {
-            value: 0.7,
+            value: 0.3,
           },
           shape: {
             type: "circle",
@@ -73,6 +69,22 @@ const ParticleBackground = () => {
           },
         },
         detectRetina: true,
+        interactivity: {
+          events: {
+            onHover: {
+              enable: true,
+              mode: "grab",
+            },
+          },
+          modes: {
+            grab: {
+              distance: 140,
+              links: {
+                opacity: 0.3,
+              },
+            },
+          },
+        },
       }}
     />
   );
