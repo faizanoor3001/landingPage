@@ -11,7 +11,7 @@ const Navigation = () => {
           {/* Logo */}
           <Link href="/" className="relative w-32 h-12">
             <Image
-              src="/images/zoro-logo.png"
+              src="/images/zoro_energy_logo.png"
               alt="ZORO Energy Logo"
               fill
               className="object-contain"
