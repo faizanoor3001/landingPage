@@ -75,7 +75,7 @@ const team = [
     role: 'CTO',
     email: 'faiza@zoroenergy.com',
     linkedin: 'https://www.linkedin.com/in/faiza-noor/', // placeholder, update if needed
-    image: '/images/team/faiza-noor-cto.jpg',
+    image: '/images/team/faiza-noor-cto.JPG',
   },
   {
     name: 'Mythra Varun',
@@ -138,7 +138,7 @@ export default function ComingSoonPage() {
           {/* Team Photo */}
           <div className="mb-12 flex flex-col items-center">
             <div className="rounded-xl overflow-hidden border-4 border-white/10 shadow-lg mb-2">
-              <Image src="/images/zoro-team-image.jpg" alt="ZORO Team" width={600} height={300} className="object-cover w-full h-auto" />
+              <Image src="/images/zoro-team-image.JPG" alt="ZORO Team" width={600} height={300} className="object-cover w-full h-auto" />
             </div>
             <div className="text-gray-400 text-sm">Our core team at ZORO Energy</div>
           </div>
