@@ -157,6 +157,53 @@ export const DirectMarketingForm = () => {
           />
         )}
       </div>
+
+      <footer className="mt-16 pt-8 border-t border-gray-700">
+        <div className="grid grid-cols-3 gap-8">
+          <div>
+            <h4 className="text-sm font-medium text-white mb-3">About the Calculator</h4>
+            <p className="text-sm text-gray-400">
+              This calculator provides an estimate of your potential earnings from direct marketing your renewable energy installation.
+            </p>
+          </div>
+          <div>
+            <h4 className="text-sm font-medium text-white mb-3">Important Notes</h4>
+            <ul className="text-sm text-gray-400 space-y-2">
+              <li>• All calculations are estimates</li>
+              <li>• Market values may vary</li>
+              <li>• Consult experts for final decisions</li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-sm font-medium text-white mb-3">Need Help?</h4>
+            <div className="space-y-2">
+              <a 
+                href="/contact" 
+                className="block text-sm text-green-500 hover:text-green-400"
+              >
+                Contact Support
+              </a>
+              <a 
+                href="/faq" 
+                className="block text-sm text-green-500 hover:text-green-400"
+              >
+                FAQ
+              </a>
+              <a 
+                href="/terms" 
+                className="block text-sm text-green-500 hover:text-green-400"
+              >
+                Terms & Conditions
+              </a>
+            </div>
+          </div>
+        </div>
+        <div className="mt-8 pt-4 border-t border-gray-700 text-center">
+          <p className="text-sm text-gray-400">
+            © {new Date().getFullYear()} ZORO Energy. All calculations are provided for informational purposes only.
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }; 
